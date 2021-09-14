@@ -1,32 +1,50 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
-interface NavProps {}
+import { User } from "../models/users";
 
-interface NavState {}
+const Nav = () => {
+  const [user, setUser] = useState(new User());
 
-class Nav extends React.Component<NavProps, NavState> {
-  render() {
-    return (
-      <nav className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-        <a className="navbar-brand col-sm-3 col-md-2 mr-0" href="#">
-          Company name
-        </a>
-        <input
-          className="form-control form-control-dark w-100"
-          type="text"
-          placeholder="Search"
-          aria-label="Search"
-        />
-        <ul className="navbar-nav px-3">
-          <li className="nav-item text-nowrap">
-            <a className="nav-link" href="#">
-              Sign out
-            </a>
-          </li>
-        </ul>
-      </nav>
-    );
-  }
-}
+  useEffect(() => {
+    (async () => {
+      const { data } = await axios.get("user");
+      setUser(
+        new User(
+          data.id,
+          data.first_name,
+          data.last_name,
+          data.email,
+          data.role
+        )
+      );
+    })();
+  }, []);
+
+  const logout = async () => {
+    await axios.post("logout", {});
+  };
+
+  return (
+    <nav className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+      <a className="navbar-brand col-sm-3 col-md-2 mr-0" href="#">
+        ReactTS
+      </a>
+      <ul className="my-2 my-md-0 mr-md-3">
+        <Link className="p-2 text-white text-decoration-none" to={"/profile"}>
+          {user?.first_name}
+        </Link>
+        <Link
+          className="p-2 text-white text-decoration-none"
+          to={"/login"}
+          onClick={logout}
+        >
+          Sign out
+        </Link>
+      </ul>
+    </nav>
+  );
+};
 
 export default Nav;
