@@ -18,6 +18,12 @@ const Menu = () => {
               Users <span className="sr-only">(current)</span>
             </NavLink>
           </li>
+          <li className="nav-item">
+            <NavLink className="nav-link " to={"/roles"}>
+              <span data-feather="home"></span>
+              Roles <span className="sr-only">(current)</span>
+            </NavLink>
+          </li>
         </ul>
       </div>
     </nav>
