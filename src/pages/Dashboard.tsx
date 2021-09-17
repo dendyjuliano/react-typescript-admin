@@ -1,21 +1,47 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import Wrapper from "../components/Wrapper";
+import * as c3 from "c3";
+import axios from "axios";
 
-interface DashboardProps {}
+const Dashboard = () => {
+  useEffect(() => {
+    (async () => {
+      const chart = c3.generate({
+        bindto: "#chart",
+        data: {
+          x: "x",
+          columns: [["x"], ["Sales"]],
+          types: {
+            Sales: "bar",
+          },
+        },
+        axis: {
+          x: {
+            type: "timeseries",
+            tick: {
+              format: "%Y-%m-%d",
+            },
+          },
+        },
+      });
 
-interface DashboardState {}
+      const { data } = await axios.get("chart");
 
-class Dashboard extends React.Component<DashboardProps, DashboardState> {
-  constructor(props: DashboardProps) {
-    super(props);
-  }
-  render() {
-    return (
-      <Wrapper>
-        <h1>Dashboard</h1>
-      </Wrapper>
-    );
-  }
-}
+      chart.load({
+        columns: [
+          ["x", ...data.map((r: any) => r.date)],
+          ["Sales", ...data.map((r: any) => r.sum)],
+        ],
+      });
+    })();
+  }, []);
+
+  return (
+    <Wrapper>
+      <h2>Daily Sales</h2>
+      <div id="chart" />
+    </Wrapper>
+  );
+};
 
 export default Dashboard;

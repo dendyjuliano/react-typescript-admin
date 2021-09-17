@@ -1,19 +1,20 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Wrapper from "../../components/Wrapper";
-import { User } from "../../models/users";
 import { Link } from "react-router-dom";
+import { Product } from "../../models/product";
+
 import Paginator from "../../components/Paginator";
 
-const Users = () => {
-  const [users, setUsers] = useState([]);
+const Products = () => {
+  const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState(0);
 
   useEffect(() => {
     (async () => {
-      const { data } = await axios.get(`users?page=${page}`);
-      setUsers(data.data);
+      const { data } = await axios.get(`product?page=${page}`);
+      setProducts(data.data);
       setLastPage(data.meta.last_page);
     })();
   }, [page]);
@@ -21,17 +22,17 @@ const Users = () => {
   const del = async (id: number) => {
     if (window.confirm("Are you sure to deleted this data")) {
       await axios.delete(`users/${id}`);
-      setUsers(users.filter((u: User) => u.id !== id));
+      setProducts(products.filter((p: Product) => p.id !== id));
     }
   };
 
   return (
     <Wrapper>
-      <h2>Users</h2>
+      <h2>Product</h2>
 
       <div className="pt-3 pb-2 mb-3 border-bottom">
-        <Link to={"/users/create"} className="btn btn-outline-primary">
-          Add User
+        <Link to={"/products/create"} className="btn btn-outline-primary">
+          Add Product
         </Link>
       </div>
 
@@ -40,26 +41,28 @@ const Users = () => {
           <thead>
             <tr>
               <th>#</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Role</th>
+              <th>Image</th>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Price</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            {users.map((user: User) => {
+            {products.map((product: Product) => {
               return (
-                <tr key={user.id}>
-                  <td>{user.id}</td>
+                <tr key={product.id}>
+                  <td>{product.id}</td>
                   <td>
-                    {user.first_name} {user.last_name}
+                    <img src={product.image} width={50} />
                   </td>
-                  <td>{user.email}</td>
-                  <td>{user.role.name}</td>
+                  <td>{product.title}</td>
+                  <td>{product.description}</td>
+                  <td>{product.price}</td>
                   <td>
                     <div className="btn-group mr-2">
                       <Link
-                        to={`/users/${user.id}/edit`}
+                        to={`/products/${product.id}/edit`}
                         className="btn btn-outline-primary"
                       >
                         Edit
@@ -67,7 +70,7 @@ const Users = () => {
                       <a
                         href="#"
                         className="btn btn-outline-danger"
-                        onClick={() => del(user.id)}
+                        onClick={() => del(product.id)}
                       >
                         Delete
                       </a>
@@ -85,4 +88,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default Products;

@@ -24,6 +24,18 @@ const Menu = () => {
               Roles <span className="sr-only">(current)</span>
             </NavLink>
           </li>
+          <li className="nav-item">
+            <NavLink className="nav-link " to={"/products"}>
+              <span data-feather="home"></span>
+              Products <span className="sr-only">(current)</span>
+            </NavLink>
+          </li>
+          <li className="nav-item">
+            <NavLink className="nav-link " to={"/orders"}>
+              <span data-feather="home"></span>
+              Orders <span className="sr-only">(current)</span>
+            </NavLink>
+          </li>
         </ul>
       </div>
     </nav>
